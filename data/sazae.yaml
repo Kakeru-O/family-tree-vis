@@ -1,0 +1,63 @@
+people:
+  - name: "磯野 波平"
+    reading: "いその なみへい"
+    sex: male
+    birthday: "1895-09-14"
+    deathday: null
+    job: "会社員"
+    image_path: ""
+    parents: []
+    
+  - name: "磯野 フネ"
+    reading: "いその ふね"
+    sex: female
+    birthday: "1901-01-11"
+    deathday: null
+    job: "主婦"
+    image_path: ""
+    parents: []
+
+  - name: "フグ田 サザエ"
+    reading: "ふぐた さざえ"
+    sex: female
+    birthday: "1922-11-22"
+    deathday: null
+    job: "主婦"
+    image_path: ""
+    parents: ["磯野 波平", "磯野 フネ"]
+
+  - name: "フグ田 マスオ"
+    reading: "ふぐた ますお"
+    sex: male
+    birthday: "1917-04-03"
+    deathday: null
+    job: "会社員"
+    image_path: ""
+    parents: []
+
+  - name: "磯野 カツオ"
+    reading: "いその かつお"
+    sex: male
+    birthday: "1938-10-31"
+    deathday: null
+    job: "小学生"
+    image_path: ""
+    parents: ["磯野 波平", "磯野 フネ"]
+
+  - name: "磯野 ワカメ"
+    reading: "いその わかめ"
+    sex: female
+    birthday: "1942-01-01"
+    deathday: null
+    job: "小学生"
+    image_path: ""
+    parents: ["磯野 波平", "磯野 フネ"]
+
+  - name: "フグ田 タラオ"
+    reading: "ふぐた たらお"
+    sex: male
+    birthday: "1947-10-10"
+    deathday: null
+    job: "幼児"
+    image_path: ""
+    parents: ["フグ田 サザエ", "フグ田 マスオ"]
