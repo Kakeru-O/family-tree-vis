@@ -8,3 +8,20 @@ dependencies = [
     "graphviz>=0.21",
     "pyyaml>=6.0.3",
 ]
+
+[tool.ruff]
+# 解析対象のバージョン
+target-version = "py312"
+# 有効にするルール (E: Error, F: Pyflakes, I: isort 等)
+lint.select = ["E", "F", "I"]
+# 無視するルール (E501: Line too long を除外)
+lint.ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+# import の並び替えを Python 公式に近い形にする
+known-first-party = ["src"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.12",
+]
