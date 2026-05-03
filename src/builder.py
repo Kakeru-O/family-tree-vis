@@ -11,7 +11,7 @@ from .parser import Person
 
 class GraphBuilder:
     def __init__(
-        self, persons: List[Person], show_job: bool = True, as_of_date: date = None
+        self, persons: List[Person], show_job: bool = True, as_of_date: date = None, output_format: str = "svg"
     ):
         self.persons = persons
         self.person_map: Dict[str, Person] = {}
@@ -19,6 +19,7 @@ class GraphBuilder:
         self.temp_images: List[str] = []
         self.show_job = show_job
         self.as_of_date: date = as_of_date or date.today()
+        self.output_format = output_format
 
         for p in persons:
             self.person_map[p.name] = p
@@ -139,7 +140,7 @@ class GraphBuilder:
         return label
 
     def build(self) -> graphviz.Digraph:
-        dot = graphviz.Digraph(comment="Family Tree", format="svg")
+        dot = graphviz.Digraph(comment="Family Tree", format=self.output_format)
         dot.attr(rankdir="TB", splines="ortho", nodesep="1.0", ranksep="1.2")
 
         today_str = self.as_of_date.strftime("%Y-%m-%d")

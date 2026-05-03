@@ -44,27 +44,33 @@ uv run python main.py [YAMLファイル] [オプション]
 | 引数 / オプション | 説明 | デフォルト |
 |---|---|---|
 | `input` | 入力 YAML ファイルのパス | `sample.yaml` |
-| `--output`, `-o` | 出力ファイル名（拡張子なし） | `sample` |
+| `--output`, `-o` | 出力ファイル名（拡張子なし） | 入力ファイル名と同じ |
+| `--format`, `-f` | 出力フォーマット (`svg`, `pdf`, `png`, `jpg` など) | `svg` |
 | `--as-of YYYY-MM-DD` | 年齢計算の基準日 | スクリプト実行日 |
 | `--hide-job` | 職業情報を非表示 | 表示 |
 
 ### 実行例
 
-```bash
-# sample.yaml を使って sample.svg を生成
-uv run python main.py
+### 実行例
 
-# 任意の YAML を指定
+```bash
+# 任意の YAML を指定（my_family.svg が生成されます）
 uv run python main.py my_family.yaml
 
-# 出力ファイル名を指定
-uv run python main.py --output my_family
+# 出力フォーマットを指定して PDF を生成（my_family.pdf が生成されます）
+uv run python main.py my_family.yaml --format pdf
+
+# 出力ファイル名を明示的に指定して生成
+uv run python main.py my_family.yaml --output family_tree_2024
 
 # 1990年1月1日時点の年齢で家系図を生成
-uv run python main.py --as-of 1990-01-01
+uv run python main.py my_family.yaml --as-of 1990-01-01
 
 # 職業情報を非表示にして生成
-uv run python main.py --hide-job
+uv run python main.py my_family.yaml --hide-job
+
+# (参考) 引数を省略した場合は sample.yaml が使用されます
+uv run python main.py
 ```
 
 ---
@@ -138,8 +144,10 @@ family-tree-vis/
 
 ## 出力
 
-実行後、指定した名前の SVG ファイルが生成されます（デフォルト: `sample.svg`）。
-写真がある場合は Base64 で SVG に埋め込まれるため、ファイル単体でブラウザや他のツールで開くことができます。
+実行後、指定した名前・フォーマットのファイルが生成されます（デフォルト: `sample.svg`）。
+
+- **SVG の場合**: 写真がある場合は Base64 で SVG に埋め込まれるため、ファイル単体でブラウザや他のツールで開くことができます。
+- **その他の形式 (PDF, PNG等) の場合**: 写真は Graphviz のレンダリング機能によって埋め込まれます。
 
 ![サンプル家系図](./sample.svg)
 

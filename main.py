@@ -19,8 +19,14 @@ def main():
     parser.add_argument(
         "--output",
         "-o",
-        default="sample",
-        help="出力ファイル名（拡張子なし）。SVGが生成されます (デフォルト: sample)",
+        default=None,
+        help="出力ファイル名（拡張子なし）。 (デフォルト: 入力ファイル名と同じ)",
+    )
+    parser.add_argument(
+        "--format",
+        "-f",
+        default="svg",
+        help="出力フォーマット (svg, pdf, png, etc.) (デフォルト: svg)",
     )
     parser.add_argument(
         "--hide-job",
@@ -59,15 +65,25 @@ def main():
     print(f"{args.input} から {len(persons)} 件のデータを読み込みました")
 
     # 2. グラフを構築
-    builder = GraphBuilder(persons, show_job=not args.hide_job, as_of_date=as_of_date)
+    builder = GraphBuilder(persons, show_job=not args.hide_job, as_of_date=as_of_date, output_format=args.format)
     dot = builder.build()
 
-    # 3. SVG をレンダリング
-    output_base = args.output.replace(".svg", "")
+    # 3. レンダリング
+    # 出力ベース名の決定（指定がなければ入力ファイル名を使用）
+    if args.output:
+        output_base = args.output
+    else:
+        output_base = input_path.stem
+
+    # 出力ファイル名から指定されたフォーマットの拡張子を除去（もしあれば）
+    if output_base.endswith(f".{args.format}"):
+        output_base = output_base[:-(len(args.format) + 1)]
+    
     output_path = dot.render(output_base, cleanup=True)
 
-    # 4. 画像を Base64 に埋め込んで SVG を自己完結させる
-    embed_images_in_svg(output_path)
+    # 4. SVG の場合のみ、画像を Base64 に埋め込んで自己完結させる
+    if args.format.lower() == "svg":
+        embed_images_in_svg(output_path)
 
     print(f"家系図を生成しました: {output_path}  (基準日: {as_of_date})")
 
