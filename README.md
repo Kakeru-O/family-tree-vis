@@ -88,6 +88,7 @@ people:
     deathday: null              # 命日 (null = 存命)
     job: "会社員"               # 職業
     image_path: "photos/namihei.png"  # 写真のパス (省略可)
+    spouse: "磯野 フネ"         # 配偶者の氏名（子供がいない夫婦の場合に必須。夫側に記述を推奨）
     parents: []                 # 親の氏名リスト（両親を指定）
 
   - name: "磯野 フネ"
@@ -133,9 +134,9 @@ family-tree-vis/
     reading: "たま"
     sex: male
     birthday: ""
+    deathday: null
     job: "飼い猫"
     image_path: ""
-    parents: []
     type: "pet"
     owner: "磯野 波平"  # 飼い主の名前
 ```

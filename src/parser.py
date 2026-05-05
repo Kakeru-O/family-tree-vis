@@ -17,6 +17,7 @@ class Person:
     parents: List[str] = field(default_factory=list)
     type: str = "person"  # person or pet
     owner: Optional[str] = None
+    spouse: Optional[str] = None
 
     # 計算で決まるプロパティ
     level: int = 0
@@ -57,6 +58,7 @@ def load_yaml_data(filepath: str) -> List[Person]:
             parents=p_dict.get("parents", []),
             type=p_dict.get("type", "person"),
             owner=p_dict.get("owner"),
+            spouse=p_dict.get("spouse"),
         )
         persons.append(person)
 

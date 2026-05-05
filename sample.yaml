@@ -6,6 +6,7 @@ people:
     deathday: null
     job: "会社員"
     image_path: "photos/namihei.png"
+    spouse: "磯野 フネ"
     parents: []
     
   - name: "磯野 フネ"
@@ -33,6 +34,7 @@ people:
     deathday: null
     job: "会社員"
     image_path: "photos/masuo.png"
+    spouse: "フグ田 サザエ"
     parents: []
 
   - name: "磯野 カツオ"
@@ -66,8 +68,8 @@ people:
     reading: "たま"
     sex: male
     birthday: ""
+    deathday: null
     job: "飼い猫"
     image_path: "photos/tama.png"
-    parents: []
     type: "pet"
     owner: "磯野 波平"

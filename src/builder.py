@@ -37,6 +37,12 @@ class GraphBuilder:
                 if parent1 and parent2:
                     partner_map[parent1.id] = parent2.id
                     partner_map[parent2.id] = parent1.id
+            
+            if p.type == "person" and p.spouse:
+                spouse_p = self.person_map.get(p.spouse)
+                if spouse_p:
+                    partner_map[p.id] = spouse_p.id
+                    partner_map[spouse_p.id] = p.id
 
         resolved = set()
         while len(resolved) < len(self.persons):
@@ -113,9 +119,14 @@ class GraphBuilder:
                 if p.deathday:
                     try:
                         dday = datetime.strptime(p.deathday, "%Y-%m-%d").date()
-                        age = dday.year - bday.year - ((dday.month, dday.day) < (bday.month, bday.day))
-                        age_str = f"享年: {age}歳 ({p.birthday}生)"
-                    except ValueError: pass
+                        # 満年齢
+                        man_age = dday.year - bday.year - ((dday.month, dday.day) < (bday.month, bday.day))
+                        # 数え年 (生まれた時を1歳とし、元旦を迎えるごとに加算)
+                        kazoe_age = dday.year - bday.year + 1
+                        age_str = f"享年 {kazoe_age} (満{man_age}歳) ({p.birthday}生)"
+                    except ValueError:
+                        # 命日のフォーマットが不正な場合
+                        age_str = f"故人 ({p.birthday}生)"
                 else:
                     age = today.year - bday.year - ((today.month, today.day) < (bday.month, bday.day))
                     age_str = f"{age}歳 ({p.birthday}生)"
@@ -168,6 +179,19 @@ class GraphBuilder:
                     if c not in couples: couples.append(c)
                     child_to_couple[p.id] = c
                     couple_to_children.setdefault(c, []).append(p)
+
+        # 1-2. spouseフィールドから夫婦を抽出（子供がいない場合への対応）
+        for p in self.persons:
+            if p.type == "person" and p.spouse:
+                spouse_p = self.person_map.get(p.spouse)
+                if spouse_p:
+                    # 性別に基づいて左右を決定（男左、女右）
+                    if p.sex == "male" or spouse_p.sex == "female":
+                        c = (p.id, spouse_p.id)
+                    else:
+                        c = (spouse_p.id, p.id)
+                    if c not in couples:
+                        couples.append(c)
 
         ordered_levels: Dict[int, List[str]] = {}
         max_level = max((p.level for p in self.persons), default=0)
@@ -272,11 +296,13 @@ class GraphBuilder:
                     # 1. 夫婦の分岐点（夫のIDが先に来た時だけ作成）
                     for husb_id, wife_id in couples:
                         if pid == husb_id and wife_id in person_ids:
-                            b_id = f"B_{husb_id}_{wife_id}"
-                            cb.node(b_id, shape="point", width="0.01", height="0.01")
-                            branch_nodes.append(b_id)
-                            # FからBへの垂直線
-                            dot.edge(f"F_{husb_id}_{wife_id}", b_id, dir="none", weight="5")
+                            # 子供がいる場合のみ、下方向への分岐点を作成する
+                            if couple_to_children.get((husb_id, wife_id)):
+                                b_id = f"B_{husb_id}_{wife_id}"
+                                cb.node(b_id, shape="point", width="0.01", height="0.01")
+                                branch_nodes.append(b_id)
+                                # FからBへの垂直線
+                                dot.edge(f"F_{husb_id}_{wife_id}", b_id, dir="none", weight="5")
                     
                     # 2. この人物のペット
                     for pet in person_to_pets.get(pid, []):
